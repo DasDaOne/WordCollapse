@@ -9,6 +9,7 @@ public class FieldGrid : MonoBehaviour, IPointerDownHandler, IPointerMoveHandler
     [SerializeField] private Vector2Int gridSize;
     [SerializeField] private LetterCell letterCellPrefab;
     [SerializeField] private WordBuilder wordBuilder;
+    [SerializeField] private SelectionVisuals selectionVisuals;
     
     private LetterCell[,] letterGrid;
 
@@ -19,6 +20,7 @@ public class FieldGrid : MonoBehaviour, IPointerDownHandler, IPointerMoveHandler
 	    gameFieldGridController.RecalculateGridSize(gridSize);
 	    
 	    SpawnGrid();
+	    selectionVisuals.Initialize();
     }
 
     private void SpawnGrid()
@@ -29,7 +31,7 @@ public class FieldGrid : MonoBehaviour, IPointerDownHandler, IPointerMoveHandler
 	    {
 		    for (int y = 0; y < gridSize.y; y++)
 		    {
-			    letterGrid[x, y] = Instantiate(letterCellPrefab, transform);
+			    letterGrid[x, y] = Instantiate(letterCellPrefab, gameFieldGridController.transform);
 			    letterGrid[x, y].index = new Vector2Int(y, x);
 		    }
 	    }
@@ -62,6 +64,11 @@ public class FieldGrid : MonoBehaviour, IPointerDownHandler, IPointerMoveHandler
 	    Vector2Int lastCellIndex = wordBuilder.LastLetterCell.index;
 	    Vector2 delta = eventData.position - gameFieldGridController.GridPointToScreen(lastCellIndex);
 	    
+	    Debug.Log(delta.magnitude);
+	    
+	    if(delta.magnitude < gameFieldGridController.CellSize.x * 0.75f)
+		    return;
+
 	    float angle = Mathf.RoundToInt(Mathf.Atan2(delta.y, delta.x) * Mathf.Rad2Deg / 45f) * 45f;
 
 	    Vector2Int offset = Vector2Int.RoundToInt(Quaternion.Euler(0, 0, angle) * Vector3.right);;

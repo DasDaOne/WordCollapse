@@ -7,6 +7,7 @@ using UnityEngine;
 public class WordBuilder : MonoBehaviour
 {
     [SerializeField] private TMP_Text wordText;
+    [SerializeField] private SelectionVisuals selectionVisuals;
     
     private Vector2Int currentDragPos;
 
@@ -50,6 +51,9 @@ public class WordBuilder : MonoBehaviour
             return;
         }
 
+        if (builtWord.Count >= GameConstants.MaxWordLength)
+            return;
+
         builtWord.Add(letterCell);
         
         letterCell.OnSelectionTrigger();
@@ -69,9 +73,11 @@ public class WordBuilder : MonoBehaviour
         if (builtWord == null)
         {
             wordText.text = "";
+            selectionVisuals.UpdateVisuals(builtWord);
             return;
         }
         
         wordText.text = string.Join("", builtWord.Select(x => x.StoredLetter));
+        selectionVisuals.UpdateVisuals(builtWord);
     }
 }

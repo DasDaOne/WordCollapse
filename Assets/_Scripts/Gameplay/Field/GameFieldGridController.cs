@@ -10,7 +10,7 @@ public class GameFieldGridController : MonoBehaviour
 
     private Rect RectTransformRect => thisRectTransform.GetScreenRect();
     private Vector2 GridStartPos => new Vector2(RectTransformRect.xMin, RectTransformRect.yMax) / CanvasScaleFactor;
-    private Vector2 CellSize => gridLayoutGroup.cellSize;
+    public Vector2 CellSize => gridLayoutGroup.cellSize;
     
     private float CanvasScaleFactor => canvasRectTransform.localScale.x;
 
@@ -24,7 +24,7 @@ public class GameFieldGridController : MonoBehaviour
     {
 	    RectTransform rectTransform = transform as RectTransform;
 
-	    float cellSize = Mathf.Min(rectTransform!.sizeDelta.x, rectTransform.sizeDelta.y) /
+	    float cellSize = Mathf.Min(rectTransform!.rect.width, rectTransform.rect.height) /
 	                     Mathf.Min(gridSize.x, gridSize.y);
 
 	    gridLayoutGroup.cellSize = new Vector2(cellSize, cellSize);
