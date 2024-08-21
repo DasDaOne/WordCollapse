@@ -4,7 +4,7 @@ public static class WeightedRandomLetterProvider
 {
 	private static readonly WeightedRandom<string> WeightedRandomLetters = new (new ()
 	{
-		{"a", 8.0f},
+		{"а", 8.0f},
 		{"б", 1.5f},
 		{"в", 4.5f},
 		{"г", 1.7f},

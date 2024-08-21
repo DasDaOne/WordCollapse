@@ -8,10 +8,12 @@ public class WordBuilder : MonoBehaviour
 {
     [SerializeField] private TMP_Text wordText;
     [SerializeField] private SelectionVisuals selectionVisuals;
-    
+    [SerializeField] private WordDatabase wordDatabase;
+
     private Vector2Int currentDragPos;
 
     private List<LetterCell> builtWord;
+    private string BuiltWordString => builtWord != null ? string.Join("", builtWord.Select(x => x.StoredLetter)) : "";
 
     public LetterCell LastLetterCell
     {
@@ -22,6 +24,11 @@ public class WordBuilder : MonoBehaviour
 
             return builtWord[^1];
         }
+    }
+
+    private void Awake()
+    {
+        wordDatabase.Initialize();
     }
 
     public void StartSelection(LetterCell letterCell)
@@ -63,6 +70,10 @@ public class WordBuilder : MonoBehaviour
     
     public void EndSelection()
     {
+        string word = BuiltWordString;
+        
+        Debug.Log($"word {word} is {(wordDatabase.IsWordValid(word) ? "valid" : "invalid")}");
+
         builtWord = null;
         
         UpdateWordVisuals();
@@ -70,14 +81,7 @@ public class WordBuilder : MonoBehaviour
 
     private void UpdateWordVisuals()
     {
-        if (builtWord == null)
-        {
-            wordText.text = "";
-            selectionVisuals.UpdateVisuals(builtWord);
-            return;
-        }
-        
-        wordText.text = string.Join("", builtWord.Select(x => x.StoredLetter));
+        wordText.text = BuiltWordString;
         selectionVisuals.UpdateVisuals(builtWord);
     }
 }

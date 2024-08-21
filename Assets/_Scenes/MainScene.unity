@@ -260,7 +260,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameFieldGrid: {fileID: 122971587}
-  gridSize: {x: 10, y: 10}
+  gridSize: {x: 4, y: 4}
   wordBuilder: {fileID: 938677236}
   selectionVisuals: {fileID: 1779519258}
 --- !u!1 &440173509
@@ -647,6 +647,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   wordText: {fileID: 938677234}
   selectionVisuals: {fileID: 1779519258}
+  wordDatabase: {fileID: 11400000, guid: 4e766c4095321564b9bb63c732affb90, type: 2}
 --- !u!1 &1748970477
 GameObject:
   m_ObjectHideFlags: 0
