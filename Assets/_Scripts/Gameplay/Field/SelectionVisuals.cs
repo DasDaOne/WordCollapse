@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class SelectionVisuals : MonoBehaviour
 {
-    [SerializeField] private GameFieldGridController gameFieldGridController;
+    [SerializeField] private GameFieldGrid gameFieldGrid;
     [SerializeField] private SelectionVisualPiece selectionVisualPiecePrefab;
 
     private SelectionVisualPiece[] visualPieces;
@@ -28,7 +28,7 @@ public class SelectionVisuals : MonoBehaviour
         for (int i = 0; i < GameConstants.MaxWordLength; i++)
         {
             visualPieces[i] = Instantiate(selectionVisualPiecePrefab, transform);
-            visualPieces[i].Initialize(gameFieldGridController.CellSize.x);
+            visualPieces[i].Initialize(gameFieldGrid.CellSize);
             visualPieces[i].SetState(false);
         }
     }
@@ -45,8 +45,8 @@ public class SelectionVisuals : MonoBehaviour
         {
             visualPieces[0].SetState(true);
             visualPieces[0].SetPoints(
-                gameFieldGridController.GridPointToScreen(letterCells[0].index) / CanvasScaleFactor - Offset,
-                gameFieldGridController.GridPointToScreen(letterCells[0].index) / CanvasScaleFactor- Offset);
+                gameFieldGrid.GridPointToScreen(letterCells[0].index) / CanvasScaleFactor - Offset,
+                gameFieldGrid.GridPointToScreen(letterCells[0].index) / CanvasScaleFactor- Offset);
             
             return;
         }
@@ -55,8 +55,8 @@ public class SelectionVisuals : MonoBehaviour
         {
             visualPieces[i].SetState(true);
             visualPieces[i].SetPoints(
-                gameFieldGridController.GridPointToScreen(letterCells[i].index) / CanvasScaleFactor- Offset,
-                gameFieldGridController.GridPointToScreen(letterCells[i + 1].index) / CanvasScaleFactor- Offset);
+                gameFieldGrid.GridPointToScreen(letterCells[i].index) / CanvasScaleFactor- Offset,
+                gameFieldGrid.GridPointToScreen(letterCells[i + 1].index) / CanvasScaleFactor- Offset);
         }
     }
 }

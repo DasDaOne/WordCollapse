@@ -29,7 +29,6 @@ public static class WeightedRandomLetterProvider
 		{"ц", 0.5f},
 		{"ч", 1.4f},
 		{"ш", 0.7f},
-		{"щ", 0.3f},
 		{"ы", 1.9f},
 		{"э", 0.3f},
 		{"ю", 0.6f},
