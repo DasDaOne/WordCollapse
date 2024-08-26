@@ -260,7 +260,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameFieldGrid: {fileID: 122971587}
-  gridSize: {x: 4, y: 4}
+  gridSize: {x: 8, y: 8}
   wordBuilder: {fileID: 938677236}
   selectionVisuals: {fileID: 1779519258}
 --- !u!1 &440173509

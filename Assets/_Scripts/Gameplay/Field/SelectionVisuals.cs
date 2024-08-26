@@ -45,8 +45,8 @@ public class SelectionVisuals : MonoBehaviour
         {
             visualPieces[0].SetState(true);
             visualPieces[0].SetPoints(
-                gameFieldGrid.GridPointToScreen(letterCells[0].index) / CanvasScaleFactor - Offset,
-                gameFieldGrid.GridPointToScreen(letterCells[0].index) / CanvasScaleFactor- Offset);
+                gameFieldGrid.GridPointToScreen(letterCells[0].Index) / CanvasScaleFactor - Offset,
+                gameFieldGrid.GridPointToScreen(letterCells[0].Index) / CanvasScaleFactor- Offset);
             
             return;
         }
@@ -55,8 +55,8 @@ public class SelectionVisuals : MonoBehaviour
         {
             visualPieces[i].SetState(true);
             visualPieces[i].SetPoints(
-                gameFieldGrid.GridPointToScreen(letterCells[i].index) / CanvasScaleFactor- Offset,
-                gameFieldGrid.GridPointToScreen(letterCells[i + 1].index) / CanvasScaleFactor- Offset);
+                gameFieldGrid.GridPointToScreen(letterCells[i].Index) / CanvasScaleFactor- Offset,
+                gameFieldGrid.GridPointToScreen(letterCells[i + 1].Index) / CanvasScaleFactor- Offset);
         }
     }
 }

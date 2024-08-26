@@ -12,17 +12,16 @@ public class WordBuilder : MonoBehaviour
 
     private Vector2Int currentDragPos;
 
-    private List<LetterCell> builtWord;
-    private string BuiltWordString => builtWord != null ? string.Join("", builtWord.Select(x => x.StoredLetter)) : "";
+    private List<LetterCell> currentSelection;
 
     public LetterCell LastLetterCell
     {
         get
         {
-            if (builtWord == null || builtWord.Count == 0)
+            if (currentSelection == null || currentSelection.Count == 0)
                 return null;
 
-            return builtWord[^1];
+            return currentSelection[^1];
         }
     }
 
@@ -33,7 +32,7 @@ public class WordBuilder : MonoBehaviour
 
     public void StartSelection(LetterCell letterCell)
     {
-        builtWord = new List<LetterCell> {letterCell};
+        currentSelection = new List<LetterCell> {letterCell};
         
         letterCell.OnSelectionTrigger();
 
@@ -45,12 +44,12 @@ public class WordBuilder : MonoBehaviour
         if (letterCell == null)
             return;
         
-        if (builtWord.Contains(letterCell))
+        if (currentSelection.Contains(letterCell))
         {
-            if(builtWord.Count <= 1 || builtWord[^2] != letterCell)
+            if(currentSelection.Count <= 1 || currentSelection[^2] != letterCell)
                 return;
             
-            builtWord.RemoveAt(builtWord.Count - 1);
+            currentSelection.RemoveAt(currentSelection.Count - 1);
            
             letterCell.OnSelectionTrigger();
             
@@ -58,30 +57,40 @@ public class WordBuilder : MonoBehaviour
             return;
         }
 
-        if (builtWord.Count >= GameConstants.MaxWordLength)
+        if (currentSelection.Count >= GameConstants.MaxWordLength)
             return;
 
-        builtWord.Add(letterCell);
+        currentSelection.Add(letterCell);
         
         letterCell.OnSelectionTrigger();
 
         UpdateWordVisuals();
     }
     
-    public void EndSelection()
+    public List<LetterCell> EndSelection()
     {
-        string word = BuiltWordString;
-        
-        Debug.Log($"word {word} is {(wordDatabase.IsWordValid(word) ? "valid" : "invalid")}");
+        List<LetterCell> selectedWord = currentSelection;
 
-        builtWord = null;
+        ResetSelection();
         
+        if(selectedWord.Count < GameConstants.MinWordLength)
+            return null;
+
+        return wordDatabase.IsWordValid(SelectionToString(selectedWord)) ? selectedWord : null;
+    }
+
+    private void ResetSelection()
+    {
+        currentSelection = null;
         UpdateWordVisuals();
     }
 
+    private string SelectionToString(List<LetterCell> word) => word != null ? string.Join("", word.Select(x => x.StoredLetter)) : "";
+    
+
     private void UpdateWordVisuals()
     {
-        wordText.text = BuiltWordString;
-        selectionVisuals.UpdateVisuals(builtWord);
+        wordText.text = SelectionToString(currentSelection);
+        selectionVisuals.UpdateVisuals(currentSelection);
     }
 }

@@ -18,15 +18,14 @@ public class WordDatabase : ScriptableObject
 
 	private void WordReader(int lineIndex, List<string> line)
 	{
-		string word = line[0];
+		string word = line[0].ToLower().Replace("ё", "е");
 
-		if (words.ContainsKey(line[0]))
+		if (word.Length < GameConstants.MinWordLength || word.Length >= GameConstants.MaxWordLength || words.ContainsKey(word))
 		{
-			Debug.LogError($"Word {word} is already present in a dictionary, word lines were {words[word]} and {lineIndex}, word was: {word}");
 			return;
 		}
 		
-		words.Add(line[0], lineIndex);
+		words.Add(word, lineIndex);
 	}
 
 	public bool IsWordValid(string word)

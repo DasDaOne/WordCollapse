@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -33,7 +34,7 @@ public class GameField : MonoBehaviour, IPointerDownHandler, IPointerMoveHandler
 	    if(wordBuilder.LastLetterCell == gameFieldGrid.GetLetterCellFromScreen(eventData.position))
 		    return;
 
-	    Vector2Int lastCellIndex = wordBuilder.LastLetterCell.index;
+	    Vector2Int lastCellIndex = wordBuilder.LastLetterCell.Index;
 	    Vector2 delta = eventData.position - gameFieldGrid.GridPointToScreen(lastCellIndex);
 	    
 	    if(delta.magnitude < gameFieldGrid.ScreenCellSize * 0.75f)
@@ -50,6 +51,22 @@ public class GameField : MonoBehaviour, IPointerDownHandler, IPointerMoveHandler
     {
 	    isSelecting = false;
 	    
-	    wordBuilder.EndSelection();
+	    List<LetterCell> selectedWord = wordBuilder.EndSelection();
+	    
+	    if(selectedWord == null)
+		    OnInvalidWordSelected();
+	    else
+		    OnValidWordSelected(selectedWord);
+    }
+
+    private void OnValidWordSelected(List<LetterCell> word)
+    {
+	    gameFieldGrid.DeleteCells(word);
+	    Debug.Log("Valid Word!!!!");
+    }
+
+    private void OnInvalidWordSelected()
+    {
+	    Debug.Log("Invalid Word :((((");
     }
 }

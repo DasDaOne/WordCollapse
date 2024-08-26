@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class GameFieldGrid : MonoBehaviour
@@ -34,14 +35,67 @@ public class GameFieldGrid : MonoBehaviour
 		    for (int y = 0; y < gridSize.y; y++)
 		    {
 			    Grid[x, y] = Instantiate(letterCellPrefab, transform);
-			    Grid[x, y].index = new Vector2Int(x, y);
+			    Grid[x, y].Init(new Vector2Int(x, y));
 
 			    RectTransform rt = Grid[x, y].transform as RectTransform;
 			    
-			    rt!.anchoredPosition = new Vector2(x, y) * CellSize;
+			    rt!.anchoredPosition = GetCellAnchorPos(new Vector2(x, y));
 			    rt.sizeDelta = Vector2.one * CellSize;
 		    }
 	    }
+    }
+
+    private Vector2 GetCellAnchorPos(Vector2 pos) => pos * CellSize;
+
+    public void DeleteCells(List<LetterCell> cellsToDelete)
+    {
+	    foreach (var cell in cellsToDelete)
+	    {
+		    cell.DestroyCell();
+		    Grid[cell.Index.x, cell.Index.y] = null;
+	    }
+	    
+	    RegenerateField();
+    }
+
+    private void RegenerateField()
+    {
+	    for (int x = 0; x < Grid.GetLength(0); x++)
+	    {
+		    for (int y = 0; y < Grid.GetLength(1); y++)
+		    {
+			    if(Grid[x, y] == null)
+				    continue;
+			    
+			    CheckCellFalling(new Vector2Int(x, y));
+		    }
+	    }
+    }
+
+    private void CheckCellFalling(Vector2Int pos)
+    {
+	    if(pos.y <= 0)
+		    return;
+	    
+	    if(Grid[pos.x, pos.y - 1] != null)
+		    return;
+
+	    int firstNeighbourIndex = 0;
+	    
+	    for (int i = pos.y; i > 0; i--)
+	    {
+		    if(Grid[pos.x, i - 1] == null)
+			    continue;
+
+		    firstNeighbourIndex = i;
+		    break;
+	    }
+
+	    Vector2Int newPos = new (pos.x, firstNeighbourIndex);
+
+	    Grid[pos.x, pos.y].Fall(GetCellAnchorPos(newPos), newPos);
+	    Grid[newPos.x, newPos.y] = Grid[pos.x, pos.y];
+	    Grid[pos.x, pos.y] = null;
     }
 
     public LetterCell GetLetterCell(Vector2Int gridPos)
