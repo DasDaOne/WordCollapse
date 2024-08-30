@@ -34,15 +34,23 @@ public class GameFieldGrid : MonoBehaviour
 	    {
 		    for (int y = 0; y < gridSize.y; y++)
 		    {
-			    Grid[x, y] = Instantiate(letterCellPrefab, transform);
-			    Grid[x, y].Init(new Vector2Int(x, y));
-
-			    RectTransform rt = Grid[x, y].transform as RectTransform;
-			    
-			    rt!.anchoredPosition = GetCellAnchorPos(new Vector2(x, y));
-			    rt.sizeDelta = Vector2.one * CellSize;
+			    Grid[x, y] = InstantiateNewCell(new Vector2Int(x, y));
 		    }
 	    }
+    }
+
+    private LetterCell InstantiateNewCell(Vector2Int pos)
+    {
+	    LetterCell cell = Instantiate(letterCellPrefab, transform);
+	    
+	    cell.Init(pos);
+	    
+	    RectTransform rt = cell.transform as RectTransform;
+
+	    rt!.anchoredPosition = GetCellAnchorPos(pos);
+	    rt.sizeDelta = Vector2.one * CellSize;
+
+	    return cell;
     }
 
     private Vector2 GetCellAnchorPos(Vector2 pos) => pos * CellSize;
@@ -69,6 +77,21 @@ public class GameFieldGrid : MonoBehaviour
 			    
 			    CheckCellFalling(new Vector2Int(x, y));
 		    }
+	    }
+
+	    for (int x = 0; x < Grid.GetLength(0); x++)
+	    {
+		    for (int y = 0; y < Grid.GetLength(1); y++)
+		    {
+			    if(Grid[x, y] != null)
+				    continue;
+
+			    LetterCell cell = InstantiateNewCell(new Vector2Int(x, y + Grid.GetLength(1)));
+
+			    cell.Fall(GetCellAnchorPos(new Vector2(x, y)), new Vector2Int(x, y));
+			    
+			    Grid[x, y] = cell;
+		    }   
 	    }
     }
 
