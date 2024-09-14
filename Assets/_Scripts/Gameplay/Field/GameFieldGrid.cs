@@ -6,15 +6,18 @@ public class GameFieldGrid : MonoBehaviour
 	[SerializeField] private LetterCell letterCellPrefab;
 
 	private LetterCell[,] Grid { get; set; }
+	private Level.CellType[,] levelArrangement;
 
     private RectTransform canvasRectTransform;
     private RectTransform thisRectTransform;
 
+    private Vector2 startPosOffset;
+    
     private Rect RectTransformRect => thisRectTransform.GetScreenRect();
-    private Vector2 GridStartPos => RectTransformRect.min / CanvasScaleFactor;
+    private Vector2 GridStartPos => RectTransformRect.min / CanvasScaleFactor + startPosOffset;
     public float CellSize { get; private set; }
     public float ScreenCellSize => CellSize * CanvasScaleFactor;
-
+    
     private float CanvasScaleFactor => canvasRectTransform.localScale.x;
 
     private void Awake()
@@ -23,24 +26,37 @@ public class GameFieldGrid : MonoBehaviour
 	    thisRectTransform = transform as RectTransform;
     }
 
-    public void CreateGrid(Vector2Int gridSize)
+    public void CreateGrid(Level level)
     {
-	    Grid = new LetterCell[gridSize.x, gridSize.y];
+	    levelArrangement = level.LevelArrangement;
+	    
+	    int sizeX = levelArrangement.GetLength(0);
+	    int sizeY = levelArrangement.GetLength(1);
+	    
+	    Grid = new LetterCell[sizeX, sizeY];
 	    
 	    CellSize = Mathf.Min(thisRectTransform!.rect.width, thisRectTransform.rect.height) /
-	                     Mathf.Min(gridSize.x, gridSize.y);
+	                     Mathf.Max(sizeX, sizeY);
+
+	    if (sizeY > sizeX)
+		    startPosOffset = new Vector2((sizeY - sizeX) * CellSize / 2, 0);
+	    else if (sizeX > sizeY)
+		    startPosOffset = new Vector2(0, (sizeX - sizeY) * CellSize / 2);
 	    
-	    for (int x = 0; x < gridSize.x; x++)
+	    for (int x = 0; x < sizeX; x++)
 	    {
-		    for (int y = 0; y < gridSize.y; y++)
+		    for (int y = 0; y < sizeY; y++)
 		    {
-			    Grid[x, y] = InstantiateNewCell(new Vector2Int(x, y));
+			    Grid[x, y] = InstantiateNewCell(levelArrangement[x, y], new Vector2Int(x, y));
 		    }
 	    }
     }
 
-    private LetterCell InstantiateNewCell(Vector2Int pos)
+    private LetterCell InstantiateNewCell(Level.CellType cellType, Vector2Int pos)
     {
+	    if (cellType == Level.CellType.Empty)
+		    return null;
+	    
 	    LetterCell cell = Instantiate(letterCellPrefab, transform);
 	    
 	    cell.Init(pos);
@@ -53,7 +69,7 @@ public class GameFieldGrid : MonoBehaviour
 	    return cell;
     }
 
-    private Vector2 GetCellAnchorPos(Vector2 pos) => pos * CellSize;
+    private Vector2 GetCellAnchorPos(Vector2 pos) => pos * CellSize + startPosOffset;
 
     public void DeleteCells(List<LetterCell> cellsToDelete)
     {
@@ -83,10 +99,10 @@ public class GameFieldGrid : MonoBehaviour
 	    {
 		    for (int y = 0; y < Grid.GetLength(1); y++)
 		    {
-			    if(Grid[x, y] != null)
+			    if(Grid[x, y] != null || levelArrangement[x, y] == Level.CellType.Empty)
 				    continue;
 
-			    LetterCell cell = InstantiateNewCell(new Vector2Int(x, y + Grid.GetLength(1)));
+			    LetterCell cell = InstantiateNewCell(Level.CellType.Default,new Vector2Int(x, y + Grid.GetLength(1)));
 
 			    cell.Fall(GetCellAnchorPos(new Vector2(x, y)), new Vector2Int(x, y));
 			    
@@ -103,18 +119,23 @@ public class GameFieldGrid : MonoBehaviour
 	    if(Grid[pos.x, pos.y - 1] != null)
 		    return;
 
-	    int firstNeighbourIndex = 0;
-	    
-	    for (int i = pos.y; i > 0; i--)
+	    int floor = -1;
+
+	    for (int y = 0; y < pos.y; y++)
 	    {
-		    if(Grid[pos.x, i - 1] == null)
+		    LetterCell cell = Grid[pos.x, y];
+		    
+		    if(cell != null || levelArrangement[pos.x, y] == Level.CellType.Empty)
 			    continue;
 
-		    firstNeighbourIndex = i;
+		    floor = y;
 		    break;
 	    }
+	    
+	    if(floor == -1)
+		    return;
 
-	    Vector2Int newPos = new (pos.x, firstNeighbourIndex);
+	    Vector2Int newPos = new (pos.x, floor);
 
 	    Grid[pos.x, pos.y].Fall(GetCellAnchorPos(newPos), newPos);
 	    Grid[newPos.x, newPos.y] = Grid[pos.x, pos.y];

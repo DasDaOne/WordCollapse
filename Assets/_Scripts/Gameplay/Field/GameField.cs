@@ -7,15 +7,15 @@ using UnityEngine.EventSystems;
 public class GameField : MonoBehaviour, IPointerDownHandler, IPointerMoveHandler, IPointerUpHandler
 {
 	[SerializeField] private GameFieldGrid gameFieldGrid;
-    [SerializeField] private Vector2Int gridSize;
+	[SerializeField] private TextAsset levelAsset;
     [SerializeField] private WordBuilder wordBuilder;
     [SerializeField] private SelectionVisuals selectionVisuals;
-    
+
     private bool isSelecting;
     
     private void Start()
     {
-	    gameFieldGrid.CreateGrid(gridSize);
+	    gameFieldGrid.CreateGrid(LevelParser.ParseLevel(levelAsset.text));
 	    
 	    selectionVisuals.Initialize();
     }
@@ -52,7 +52,7 @@ public class GameField : MonoBehaviour, IPointerDownHandler, IPointerMoveHandler
 	    isSelecting = false;
 	    
 	    List<LetterCell> selectedWord = wordBuilder.EndSelection();
-	    
+
 	    if(selectedWord == null)
 		    OnInvalidWordSelected();
 	    else

@@ -9,6 +9,8 @@ public class WordBuilder : MonoBehaviour
     [SerializeField] private TMP_Text wordText;
     [SerializeField] private SelectionVisuals selectionVisuals;
     [SerializeField] private WordDatabase wordDatabase;
+    [Space]
+    [SerializeField] private bool debugAllWordsValid;
 
     private Vector2Int currentDragPos;
 
@@ -76,6 +78,9 @@ public class WordBuilder : MonoBehaviour
         if(selectedWord.Count < GameConstants.MinWordLength)
             return null;
 
+        if (debugAllWordsValid)
+            return selectedWord;
+        
         return wordDatabase.IsWordValid(SelectionToString(selectedWord)) ? selectedWord : null;
     }
 

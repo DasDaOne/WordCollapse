@@ -12,7 +12,7 @@ public class UIPanel : MonoBehaviour
 {	
 	public const float AnimationTime = 0.5f;
 
-	protected virtual Vector2 EndPos => new (AttachedCanvasRT.sizeDelta.x, 0);
+	protected virtual Vector2 EndPos => new (-AttachedCanvasRT.sizeDelta.x, 0);
 	protected virtual Vector2 StartPos => new (AttachedCanvasRT.sizeDelta.x, 0);
 	protected virtual Vector2 PosInside => new (0, 0);
 	
@@ -79,17 +79,13 @@ public class UIPanel : MonoBehaviour
 		HidePanel(notifyPanel, playAnimation);
 	}
 	
-	protected virtual void ShowPanel(bool playAnimation, Action animationCallback = null)
+	protected virtual void ShowPanel(bool playAnimation)
 	{
 		if(playAnimation)
 		{
 			IsInAnimation = true;
 			AttachedRectTransform.anchoredPosition = StartPos;
-			AttachedRectTransform.DOAnchorPos(PosInside, AnimationTime).OnComplete(() => 
-			{
-				IsInAnimation = false;	
-				animationCallback?.Invoke();
-			});			
+			AttachedRectTransform.DOAnchorPos(PosInside, AnimationTime).OnComplete(() => IsInAnimation = false);			
 		}
 		else
 			AttachedRectTransform.anchoredPosition = PosInside;
