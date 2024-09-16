@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GameFieldGrid : MonoBehaviour
+public class GameplayGrid : MonoBehaviour
 {
 	[SerializeField] private LetterCell letterCellPrefab;
 
@@ -167,5 +167,10 @@ public class GameFieldGrid : MonoBehaviour
     public Vector2 GridPointToScreen(Vector2Int gridPoint)
     {
 	    return (GridStartPos + (Vector2)gridPoint * CellSize + Vector2.one * CellSize / 2) * CanvasScaleFactor;
+    }
+    
+    public Vector2 GridPointToCanvas(Vector2Int gridPoint)
+    {
+	    return GridStartPos + (Vector2)gridPoint * CellSize + Vector2.one * CellSize / 2;
     }
 }

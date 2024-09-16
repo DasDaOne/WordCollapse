@@ -8,8 +8,8 @@ public class WordDatabase : ScriptableObject
 	[SerializeField] private TextAsset wordsTextAsset;
 	
 	private Dictionary<string, int> words;
-	
-	public void Initialize()
+
+	private void OnEnable()
 	{
 		words = new Dictionary<string, int>();
 		
@@ -30,6 +30,6 @@ public class WordDatabase : ScriptableObject
 
 	public bool IsWordValid(string word)
 	{
-		return words.ContainsKey(word);
+		return word != null && words.ContainsKey(word);
 	}
 }

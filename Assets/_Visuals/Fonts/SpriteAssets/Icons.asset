@@ -51,7 +51,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 84a92b25f83d49b9bc132d206b370281, type: 3}
-  m_Name: GoalIcons
+  m_Name: Icons
   m_EditorClassIdentifier: 
   hashCode: 417778045
   material: {fileID: -5365421982429045983}
@@ -85,24 +85,91 @@ MonoBehaviour:
     m_Unicode: 65534
     m_GlyphIndex: 0
     m_Scale: 1
-    m_Name: GoalLetters
-    m_HashCode: 1935549288
+    m_Name: LettersBlack
+    m_HashCode: 1966428778
+  - m_ElementType: 2
+    m_Unicode: 65534
+    m_GlyphIndex: 2
+    m_Scale: 1
+    m_Name: LettersBlue
+    m_HashCode: 1491245171
+  - m_ElementType: 2
+    m_Unicode: 65534
+    m_GlyphIndex: 1
+    m_Scale: 1
+    m_Name: TimerBlack
+    m_HashCode: 1871719232
+  - m_ElementType: 2
+    m_Unicode: 65534
+    m_GlyphIndex: 3
+    m_Scale: 1
+    m_Name: TimerBlue
+    m_HashCode: -984484775
   m_SpriteGlyphTable:
   - m_Index: 0
     m_Metrics:
-      m_Width: 150
-      m_Height: 150
+      m_Width: 128
+      m_Height: 128
       m_HorizontalBearingX: 0
-      m_HorizontalBearingY: 140
+      m_HorizontalBearingY: 115
       m_HorizontalAdvance: 150
     m_GlyphRect:
       m_X: 0
-      m_Y: 150
-      m_Width: 150
-      m_Height: 150
+      m_Y: 896
+      m_Width: 128
+      m_Height: 128
     m_Scale: 1.1
     m_AtlasIndex: 0
     m_ClassDefinitionType: 0
     sprite: {fileID: -2110715007, guid: 589373154c964e847a34145814e9fe16, type: 3}
+  - m_Index: 2
+    m_Metrics:
+      m_Width: 128
+      m_Height: 128
+      m_HorizontalBearingX: 0
+      m_HorizontalBearingY: 115
+      m_HorizontalAdvance: 150
+    m_GlyphRect:
+      m_X: 0
+      m_Y: 768
+      m_Width: 128
+      m_Height: 128
+    m_Scale: 1.1
+    m_AtlasIndex: 0
+    m_ClassDefinitionType: 0
+    sprite: {fileID: 149550480, guid: 589373154c964e847a34145814e9fe16, type: 3}
+  - m_Index: 1
+    m_Metrics:
+      m_Width: 128
+      m_Height: 128
+      m_HorizontalBearingX: 0
+      m_HorizontalBearingY: 105
+      m_HorizontalAdvance: 150
+    m_GlyphRect:
+      m_X: 128
+      m_Y: 896
+      m_Width: 128
+      m_Height: 128
+    m_Scale: 1.1
+    m_AtlasIndex: 0
+    m_ClassDefinitionType: 0
+    sprite: {fileID: -918271651, guid: 589373154c964e847a34145814e9fe16, type: 3}
+  - m_Index: 3
+    m_Metrics:
+      m_Width: 128
+      m_Height: 128
+      m_HorizontalBearingX: 0
+      m_HorizontalBearingY: 105
+      m_HorizontalAdvance: 150
+    m_GlyphRect:
+      m_X: 128
+      m_Y: 768
+      m_Width: 128
+      m_Height: 128
+    m_Scale: 1.1
+    m_AtlasIndex: 0
+    m_ClassDefinitionType: 0
+    sprite: {fileID: -1305088296, guid: 589373154c964e847a34145814e9fe16, type: 3}
   spriteInfoList: []
-  fallbackSpriteAssets: []
+  fallbackSpriteAssets:
+  - {fileID: 11400000, guid: c41005c129ba4d66911b75229fd70b45, type: 2}
