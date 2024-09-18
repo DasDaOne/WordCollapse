@@ -3,7 +3,7 @@ using DG.Tweening;
 using TMPro;
 using UnityEngine;
 
-public class LevelInfoPanel : MonoBehaviour
+public class LevelTimer : MonoBehaviour
 {
     [SerializeField] private Transform clockTransform;
     [SerializeField] private TMP_Text timerText;

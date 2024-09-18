@@ -2,7 +2,10 @@ using UnityEngine;
 
 public class ClassicGameplay : MonoBehaviour
 {
-	[SerializeField] private LevelInfoPanel levelInfoPanel;
+	[Header("LevelInfo")]
+	[SerializeField] private LevelTimer levelTimer;
+	[SerializeField] private LevelGoals levelGoals;
+	[Header("Gameplay")]
 	[SerializeField] private GameplayGrid gameplayGrid;
 	[SerializeField] private SelectionVisuals selectionVisuals;
 	[SerializeField] private GameplaySelection gameplaySelection;
@@ -11,10 +14,11 @@ public class ClassicGameplay : MonoBehaviour
 
 	public void Initialize(Level level)
 	{
+		levelTimer.Initialize();
+		levelGoals.Initialize(gameplayGrid, level.LevelGoals);
+
 		gameplayGrid.CreateGrid(level);
 		selectionVisuals.Initialize(gameplayGrid.CellSize);
 		gameplaySelection.Initialize(gameplayGrid, wordDatabase, selectionVisuals);
-
-		levelInfoPanel.Initialize();
 	}
 }

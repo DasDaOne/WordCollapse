@@ -111,7 +111,7 @@ public class GameplaySelection : MonoBehaviour, IPointerDownHandler, IPointerMov
 
     private void OnValidWordSelected(List<LetterCell> word)
     {
-	    gameplayGrid.DeleteCells(word);
+	    gameplayGrid.DeleteCells(word, true);
     }
 
     private void OnInvalidWordSelected()

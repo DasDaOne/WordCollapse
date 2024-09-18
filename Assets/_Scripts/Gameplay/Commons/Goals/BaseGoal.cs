@@ -8,31 +8,34 @@ public abstract class BaseGoal : MonoBehaviour
 {
     [SerializeField] private CanvasGroup canvasGroup;
     [SerializeField] private TMP_Text text;
-    [SerializeField] private string goalText;
+    [SerializeField] private string goalText = "{0}/{1}";
     
     public event Action onGoalCompleted;
     public bool IsCompleted { get; private set; }
-    
-    private int goalAmount;
 
-    public void SetupGoal(int amount)
+    protected int Goal;
+    protected int GoalCompletion;
+
+    public void SetupGoal(GameplayGrid grid, int goal)
     {
-        goalAmount = amount;
-        text.text = string.Format(goalText, 0, goalAmount);
+        Goal = goal;
+        text.text = string.Format(goalText, 0, Goal);
 
         canvasGroup.alpha = 1;
+        
+        SubscribeToEvents(grid);
     }
 
-    protected void UpdateGoal(int newAmount)
+    protected abstract void SubscribeToEvents(GameplayGrid grid);
+
+    protected void UpdateGoalVisuals()
     {
         if(IsCompleted)
             return;
-
-        newAmount = Mathf.Min(newAmount, goalAmount);
         
-        text.text = string.Format(goalText, newAmount, goalAmount);
+        text.text = string.Format(goalText, GoalCompletion, Goal);
 
-        if (newAmount < goalAmount) return;
+        if (GoalCompletion < Goal) return;
         
         canvasGroup.alpha = 0.5f;
         IsCompleted = true;

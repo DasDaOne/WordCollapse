@@ -1,17 +1,16 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class GoalLetters : BaseGoal
 {
-	private void OnEnable()
+	protected override void SubscribeToEvents(GameplayGrid grid)
 	{
-		throw new NotImplementedException();
+		grid.OnDestroyLetters += OnDestroyLetters;
 	}
 
-	private void OnDisable()
+	private void OnDestroyLetters(int lettersAmount)
 	{
-		throw new NotImplementedException();
+		GoalCompletion = Mathf.Clamp(GoalCompletion + lettersAmount, 0, Goal);
+		
+		UpdateGoalVisuals();
 	}
 }

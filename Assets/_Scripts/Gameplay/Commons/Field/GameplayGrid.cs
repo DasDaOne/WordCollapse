@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -19,6 +20,9 @@ public class GameplayGrid : MonoBehaviour
     public float ScreenCellSize => CellSize * CanvasScaleFactor;
     
     private float CanvasScaleFactor => canvasRectTransform.localScale.x;
+    
+    public event Action OnDestroyWord;
+    public event Action<int> OnDestroyLetters;
 
     private void Awake()
     {
@@ -71,7 +75,7 @@ public class GameplayGrid : MonoBehaviour
 
     private Vector2 GetCellAnchorPos(Vector2 pos) => pos * CellSize + startPosOffset;
 
-    public void DeleteCells(List<LetterCell> cellsToDelete)
+    public void DeleteCells(List<LetterCell> cellsToDelete, bool isWord)
     {
 	    foreach (var cell in cellsToDelete)
 	    {
@@ -80,6 +84,11 @@ public class GameplayGrid : MonoBehaviour
 	    }
 	    
 	    RegenerateField();
+
+	    OnDestroyLetters?.Invoke(cellsToDelete.Count);
+	    
+	    if(isWord)
+		    OnDestroyWord?.Invoke();
     }
 
     private void RegenerateField()

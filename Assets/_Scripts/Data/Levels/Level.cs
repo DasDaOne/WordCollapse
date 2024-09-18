@@ -30,17 +30,19 @@ public static class LevelParser
 
 		return new Level
 		{
-			LevelArrangement = levelArrangement
+			LevelArrangement = levelArrangement,
+			LevelGoals = parsedLevel.LevelGoals
 		};
 	}
 
 	private struct ParsedLevel
 	{
 		public string[,] LevelArrangement;
+
+		public Level.Goal[] LevelGoals;
 	}
 }
 
-[Serializable]
 public struct Level
 {
 	public enum CellType
@@ -50,6 +52,21 @@ public struct Level
 		Ice = 1,
 		Wall = 2
 	}
-
+	
 	public CellType[,] LevelArrangement;
+
+	public enum GoalType
+	{
+		Letters,
+		Words,
+		IceBlocks
+	}
+	
+	public struct Goal
+	{
+		public GoalType GoalType;
+		public int GoalAmount;
+	}
+
+	public Goal[] LevelGoals;
 }
