@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class GameplayPanel : UIPanel
+public class GameplayPanel : MovePanel
 {
 	[SerializeField] private Transform gameplayParent;
 	[SerializeField] private ClassicGameplay gameplayPrefab;

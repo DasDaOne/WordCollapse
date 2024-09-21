@@ -1,21 +1,17 @@
+using System;
 using UnityEngine;
 using DG.Tweening;
 using UnityEngine.Events;
-using System;
 
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
 
 [RequireComponent(typeof(CanvasGroup))]
-public class UIPanel : MonoBehaviour
+public abstract class UIPanel : MonoBehaviour
 {	
-	public const float AnimationTime = 0.5f;
+	protected const float AnimationTime = 0.5f;
 
-	protected virtual Vector2 EndPos => new (-AttachedCanvasRT.sizeDelta.x, 0);
-	protected virtual Vector2 StartPos => new (AttachedCanvasRT.sizeDelta.x, 0);
-	protected virtual Vector2 PosInside => new (0, 0);
-	
 	// InstantCallback
 	public UnityEvent OnShowEvent { get; } = new ();
 	public UnityEvent OnHideEvent { get; } = new ();
@@ -54,7 +50,7 @@ public class UIPanel : MonoBehaviour
 	// End Components
 	
 	public bool UIPanelState {get; protected set;}
-	public bool IsInAnimation {get; protected set;}
+	public bool IsInAnimation {get; private set;}
 	
 	public void Show(bool notifyPanel = true, bool playAnimation = true)
 	{
@@ -76,56 +72,59 @@ public class UIPanel : MonoBehaviour
 		
 		HidePanel(notifyPanel, playAnimation);
 	}
-	
-	protected virtual void ShowPanel(bool playAnimation)
+
+	private void ShowPanel(bool playAnimation)
 	{
-		AttachedCanvasGroup.alpha = 1;
 		AttachedCanvasGroup.blocksRaycasts = false;
-		
+
 		if(playAnimation)
 		{
 			IsInAnimation = true;
-			AttachedRectTransform.anchoredPosition = StartPos;
-			AttachedRectTransform.DOAnchorPos(PosInside, AnimationTime).OnComplete(() =>
+		
+			ShowPanelAnimated(() =>
 			{
-				IsInAnimation = false;
 				AttachedCanvasGroup.blocksRaycasts = true;
-			});			
+				IsInAnimation = false;
+			});
 		}
 		else
 		{
-			AttachedRectTransform.anchoredPosition = PosInside;
 			AttachedCanvasGroup.blocksRaycasts = true;
+			ShowPanelInstant();
 		}
 	}
-	
-	protected virtual void HidePanel(bool notifyPanel, bool playAnimation)
+
+	protected abstract void ShowPanelAnimated(TweenCallback onComplete);
+	protected abstract void ShowPanelInstant();
+
+	private void HidePanel(bool notifyPanel, bool playAnimation)
 	{
 		AttachedCanvasGroup.blocksRaycasts = false;
 		
 		if(!playAnimation)
 		{
-			AttachedRectTransform.anchoredPosition = EndPos;
-			HideCanvas(notifyPanel);
+			HidePanelInstant();
+					
+			if(notifyPanel)
+				OnHide();
+			
 			return;
 		}
 		
 		IsInAnimation = true;
-		AttachedRectTransform.DOAnchorPos(EndPos, AnimationTime).OnComplete(() => 
+		
+		HidePanelAnimated(() =>
 		{
-			HideCanvas(notifyPanel);
+			if(notifyPanel)
+				OnHide();
+			
 			IsInAnimation = false;
 		});
 	}
-	
-	protected void HideCanvas(bool notifyPanel)
-	{
-		AttachedCanvasGroup.alpha = 0;
-					
-		if(notifyPanel)
-			OnHide();
-	}
-	
+
+	protected abstract void HidePanelAnimated(TweenCallback onComplete);
+	protected abstract void HidePanelInstant();
+
 	private void Update()
 	{
 		if(Input.GetKeyDown(KeyCode.Escape) && UIPanelState && !IsInAnimation)
