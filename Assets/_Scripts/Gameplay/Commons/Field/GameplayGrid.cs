@@ -30,7 +30,7 @@ public class GameplayGrid : MonoBehaviour
 	    thisRectTransform = transform as RectTransform;
     }
 
-    public void CreateGrid(Level level)
+    public void InitializeGrid(Level level)
     {
 	    levelArrangement = level.LevelArrangement;
 	    
@@ -46,12 +46,19 @@ public class GameplayGrid : MonoBehaviour
 		    startPosOffset = new Vector2((sizeY - sizeX) * CellSize / 2, 0);
 	    else if (sizeX > sizeY)
 		    startPosOffset = new Vector2(0, (sizeX - sizeY) * CellSize / 2);
+    }
+
+    public void CreateGrid()
+    {
+	    int sizeX = levelArrangement.GetLength(0);
+	    int sizeY = levelArrangement.GetLength(1);
 	    
 	    for (int x = 0; x < sizeX; x++)
 	    {
 		    for (int y = 0; y < sizeY; y++)
 		    {
-			    Grid[x, y] = InstantiateNewCell(levelArrangement[x, y], new Vector2Int(x, y));
+			    Grid[x, y] = InstantiateNewCell(levelArrangement[x, y], new Vector2Int(x, y + Grid.GetLength(1)));
+			    Grid[x, y]?.Fall(GetCellAnchorPos(new Vector2(x, y)), new Vector2Int(x, y), x * 0.1f + y * 0.01f);
 		    }
 	    }
     }

@@ -1,3 +1,4 @@
+using System;
 using DG.Tweening;
 using TMPro;
 using UnityEngine;
@@ -27,14 +28,20 @@ public class LetterCell : MonoBehaviour
         Destroy(gameObject);
     }
 
-    public void Fall(Vector2 endAnchorPos, Vector2Int newIndex)
+    public void Fall(Vector2 endAnchorPos, Vector2Int newIndex, float delay = 0)
     {
         Index = newIndex;
 
-        rectTransform.DOAnchorPos(endAnchorPos, 0.5f);
+        rectTransform.DOAnchorPos(endAnchorPos, 0.5f).SetDelay(delay);
     }
 
     public void OnSelectionTrigger()
     {
+    }
+
+    private void OnDestroy()
+    {
+        if(rectTransform != null)
+            rectTransform.DOKill();
     }
 }

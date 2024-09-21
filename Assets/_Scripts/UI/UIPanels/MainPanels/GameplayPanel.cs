@@ -18,17 +18,16 @@ public class GameplayPanel : MovePanel
 
 	protected override void OnShow()
 	{
-		CreateGameplay();
-	}
-
-	private void CreateGameplay()
-	{
 		if(currentGameplay != null)
 			Destroy(currentGameplay.gameObject);
 		
 		currentGameplay = Instantiate(gameplayPrefab, gameplayParent);
-
 		currentGameplay.Initialize(LevelParser.ParseLevel(levelTextAsset.text));
+	}
+
+	protected override void OnShowAnimationEnd()
+	{
+		currentGameplay.CreateGrid();
 	}
 
 	protected override void OnHide()
@@ -58,6 +57,12 @@ public class GameplayPanel : MovePanel
 
 	private void OnRestartConfirmed()
 	{
-		CreateGameplay();
+		if(currentGameplay != null)
+			Destroy(currentGameplay.gameObject);
+		
+		currentGameplay = Instantiate(gameplayPrefab, gameplayParent);	
+		
+		currentGameplay.Initialize(LevelParser.ParseLevel(levelTextAsset.text));
+		currentGameplay.CreateGrid();
 	}
 }

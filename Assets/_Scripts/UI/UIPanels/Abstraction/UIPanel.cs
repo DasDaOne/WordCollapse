@@ -87,6 +87,7 @@ public abstract class UIPanel : MonoBehaviour
 			animationTween = ShowPanelAnimated(() =>
 			{
 				IsInAnimation = false;
+				OnShowAnimationEnd();
 			});
 		}
 		else
@@ -138,6 +139,7 @@ public abstract class UIPanel : MonoBehaviour
 	protected virtual void OnEscapeClick(){}
 	protected virtual void OnHide(){}
 	protected virtual void OnShow(){}
+	protected virtual void OnShowAnimationEnd(){}
 	
 	#if UNITY_EDITOR
 	[ContextMenu("Show Panel")]

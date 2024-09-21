@@ -17,8 +17,13 @@ public class ClassicGameplay : MonoBehaviour
 		levelTimer.Initialize();
 		levelGoals.Initialize(gameplayGrid, level.LevelGoals);
 
-		gameplayGrid.CreateGrid(level);
+		gameplayGrid.InitializeGrid(level);
 		selectionVisuals.Initialize(gameplayGrid.CellSize);
 		gameplaySelection.Initialize(gameplayGrid, wordDatabase, selectionVisuals);
+	}
+
+	public void CreateGrid()
+	{
+		gameplayGrid.CreateGrid();
 	}
 }
