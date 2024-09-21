@@ -9,6 +9,8 @@ public class GameplayPanel : UIPanel
 
 	private ClassicGameplay currentGameplay;
 	
+	protected override Vector2 EndPos => StartPos;
+
 	protected override void OnShow()
 	{
 		base.OnShow();

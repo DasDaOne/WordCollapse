@@ -8,6 +8,8 @@ public class MainMenuPanel : UIPanel
 {
     [SerializeField] private Button playButton;
 
+    protected override Vector2 StartPos => EndPos;
+
     private void OnEnable()
     {
         playButton.onClick.AddListener(OnPlayButtonClick);

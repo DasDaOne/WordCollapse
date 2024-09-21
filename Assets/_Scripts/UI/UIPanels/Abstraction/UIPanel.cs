@@ -59,9 +59,7 @@ public class UIPanel : MonoBehaviour
 	public void Show(bool notifyPanel = true, bool playAnimation = true)
 	{
 		UIPanelState = true;
-		
-		AttachedCanvasGroup.Show();
-		
+
 		OnShowEvent.Invoke();
 		
 		if(notifyPanel)
@@ -81,18 +79,30 @@ public class UIPanel : MonoBehaviour
 	
 	protected virtual void ShowPanel(bool playAnimation)
 	{
+		AttachedCanvasGroup.alpha = 1;
+		AttachedCanvasGroup.blocksRaycasts = false;
+		
 		if(playAnimation)
 		{
 			IsInAnimation = true;
 			AttachedRectTransform.anchoredPosition = StartPos;
-			AttachedRectTransform.DOAnchorPos(PosInside, AnimationTime).OnComplete(() => IsInAnimation = false);			
+			AttachedRectTransform.DOAnchorPos(PosInside, AnimationTime).OnComplete(() =>
+			{
+				IsInAnimation = false;
+				AttachedCanvasGroup.blocksRaycasts = true;
+			});			
 		}
 		else
+		{
 			AttachedRectTransform.anchoredPosition = PosInside;
+			AttachedCanvasGroup.blocksRaycasts = true;
+		}
 	}
 	
 	protected virtual void HidePanel(bool notifyPanel, bool playAnimation)
 	{
+		AttachedCanvasGroup.blocksRaycasts = false;
+		
 		if(!playAnimation)
 		{
 			AttachedRectTransform.anchoredPosition = EndPos;
@@ -110,7 +120,7 @@ public class UIPanel : MonoBehaviour
 	
 	protected void HideCanvas(bool notifyPanel)
 	{
-		AttachedCanvasGroup.Hide();
+		AttachedCanvasGroup.alpha = 0;
 					
 		if(notifyPanel)
 			OnHide();
@@ -133,7 +143,8 @@ public class UIPanel : MonoBehaviour
 	public void EditorShowPanel()
 	{
 		CanvasGroup cg = GetComponent<CanvasGroup>();
-		cg.Show();
+		AttachedCanvasGroup.alpha = 1;
+		AttachedCanvasGroup.blocksRaycasts = true;
 		EditorUtility.SetDirty(cg);
 	}
 	
@@ -141,7 +152,8 @@ public class UIPanel : MonoBehaviour
 	public void EditorHidePanel()
 	{
 		CanvasGroup cg = GetComponent<CanvasGroup>();
-		cg.Hide();
+		AttachedCanvasGroup.alpha = 0;
+		AttachedCanvasGroup.blocksRaycasts = false;
 		EditorUtility.SetDirty(cg);
 	}
 	#endif
