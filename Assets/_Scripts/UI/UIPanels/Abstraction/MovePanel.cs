@@ -8,12 +8,12 @@ public class MovePanel : UIPanel
 	protected virtual Vector2 StartPos => new (AttachedCanvasRT.sizeDelta.x, 0);
 	protected virtual Vector2 PosInside => new (0, 0);
 
-	protected override void ShowPanelAnimated(TweenCallback onComplete)
+	protected override Tween ShowPanelAnimated(TweenCallback onComplete)
 	{
 		AttachedCanvasGroup.alpha = 1;
 		AttachedRectTransform.anchoredPosition = StartPos;
 
-		AttachedRectTransform.DOAnchorPos(PosInside, AnimationTime).OnComplete(onComplete);
+		return AttachedRectTransform.DOAnchorPos(PosInside, AnimationTime).OnComplete(onComplete);
 	}
 
 	protected override void ShowPanelInstant()
@@ -23,9 +23,9 @@ public class MovePanel : UIPanel
 		AttachedRectTransform.anchoredPosition = PosInside;
 	}
 
-	protected override void HidePanelAnimated(TweenCallback onComplete)
+	protected override Tween HidePanelAnimated(TweenCallback onComplete)
 	{
-		AttachedRectTransform.DOAnchorPos(EndPos, AnimationTime).OnComplete(() => 
+		return AttachedRectTransform.DOAnchorPos(EndPos, AnimationTime).OnComplete(() => 
 		{
 			AttachedCanvasGroup.alpha = 0;
 			onComplete?.Invoke();

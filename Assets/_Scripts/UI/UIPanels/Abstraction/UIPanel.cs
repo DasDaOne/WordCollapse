@@ -12,12 +12,12 @@ public abstract class UIPanel : MonoBehaviour
 {	
 	protected const float AnimationTime = 0.5f;
 
-	// InstantCallback
+#region Callbacks
 	public UnityEvent OnShowEvent { get; } = new ();
 	public UnityEvent OnHideEvent { get; } = new ();
-	// End InstantCallback
-	
-	// Components
+#endregion
+
+#region AttachedComponents
 	private CanvasGroup cachedCanvasGroup;
 	protected CanvasGroup AttachedCanvasGroup 
 	{
@@ -47,10 +47,12 @@ public abstract class UIPanel : MonoBehaviour
 			return cachedCanvasRT;
 		}
 	}
-	// End Components
-	
+#endregion
+
 	public bool UIPanelState {get; protected set;}
 	public bool IsInAnimation {get; private set;}
+
+	private Tween animationTween;
 	
 	public void Show(bool notifyPanel = true, bool playAnimation = true)
 	{
@@ -75,31 +77,31 @@ public abstract class UIPanel : MonoBehaviour
 
 	private void ShowPanel(bool playAnimation)
 	{
-		AttachedCanvasGroup.blocksRaycasts = false;
-
+		AttachedCanvasGroup.blocksRaycasts = true;
+		animationTween?.Kill();
+		
 		if(playAnimation)
 		{
 			IsInAnimation = true;
 		
-			ShowPanelAnimated(() =>
+			animationTween = ShowPanelAnimated(() =>
 			{
-				AttachedCanvasGroup.blocksRaycasts = true;
 				IsInAnimation = false;
 			});
 		}
 		else
 		{
-			AttachedCanvasGroup.blocksRaycasts = true;
 			ShowPanelInstant();
 		}
 	}
 
-	protected abstract void ShowPanelAnimated(TweenCallback onComplete);
+	protected abstract Tween ShowPanelAnimated(TweenCallback onComplete);
 	protected abstract void ShowPanelInstant();
 
 	private void HidePanel(bool notifyPanel, bool playAnimation)
 	{
 		AttachedCanvasGroup.blocksRaycasts = false;
+		animationTween?.Kill();
 		
 		if(!playAnimation)
 		{
@@ -113,7 +115,7 @@ public abstract class UIPanel : MonoBehaviour
 		
 		IsInAnimation = true;
 		
-		HidePanelAnimated(() =>
+		animationTween = HidePanelAnimated(() =>
 		{
 			if(notifyPanel)
 				OnHide();
@@ -122,7 +124,7 @@ public abstract class UIPanel : MonoBehaviour
 		});
 	}
 
-	protected abstract void HidePanelAnimated(TweenCallback onComplete);
+	protected abstract Tween HidePanelAnimated(TweenCallback onComplete);
 	protected abstract void HidePanelInstant();
 
 	private void Update()

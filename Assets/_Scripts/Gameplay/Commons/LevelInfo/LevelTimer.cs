@@ -33,4 +33,9 @@ public class LevelTimer : MonoBehaviour
         timeOnLevel += Time.deltaTime;
         timerText.text = string.Format(timerFormatString, TimeSpan.FromSeconds(timeOnLevel));
     }
+
+    private void OnDestroy()
+    {
+        clockAnimation?.Kill();
+    }
 }

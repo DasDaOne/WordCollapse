@@ -1,9 +1,14 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameplayPanel : MovePanel
 {
+	[Header("Gameplay")]
 	[SerializeField] private Transform gameplayParent;
 	[SerializeField] private ClassicGameplay gameplayPrefab;
+	[Header("Restart")]
+	[SerializeField] private Button restartButton;
+	[SerializeField] private GameplayRestartPanel gameplayRestartPanel;
 	[Space]
 	[SerializeField] private TextAsset levelTextAsset;
 
@@ -13,7 +18,14 @@ public class GameplayPanel : MovePanel
 
 	protected override void OnShow()
 	{
-		base.OnShow();
+		CreateGameplay();
+	}
+
+	private void CreateGameplay()
+	{
+		if(currentGameplay != null)
+			Destroy(currentGameplay.gameObject);
+		
 		currentGameplay = Instantiate(gameplayPrefab, gameplayParent);
 
 		currentGameplay.Initialize(LevelParser.ParseLevel(levelTextAsset.text));
@@ -24,6 +36,28 @@ public class GameplayPanel : MovePanel
 		if(currentGameplay == null)
 			return;
 		
-		Destroy(currentGameplay);
+		Destroy(currentGameplay.gameObject);
+	}
+	
+	private void OnEnable()
+	{
+		restartButton.onClick.AddListener(OnRestartButtonClick);
+		gameplayRestartPanel.OnRestartConfirmed += OnRestartConfirmed;
+	}
+
+	private void OnDisable()
+	{
+		restartButton.onClick.RemoveListener(OnRestartButtonClick);
+		gameplayRestartPanel.OnRestartConfirmed -= OnRestartConfirmed;
+	}
+
+	private void OnRestartButtonClick()
+	{
+		gameplayRestartPanel.Show();
+	}
+
+	private void OnRestartConfirmed()
+	{
+		CreateGameplay();
 	}
 }
