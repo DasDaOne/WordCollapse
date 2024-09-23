@@ -13,6 +13,8 @@ public class LetterCell : MonoBehaviour
     
     public string StoredLetter { get; private set; }
 
+    private Tween currentAnimation;
+    
     public void Init(Vector2Int index)
     {
         rectTransform = transform as RectTransform;
@@ -35,12 +37,41 @@ public class LetterCell : MonoBehaviour
         rectTransform.DOAnchorPos(endAnchorPos, 0.5f).SetDelay(delay);
     }
 
-    public void OnSelectionTrigger()
+    public void PlaySelectionTriggerAnimation()
     {
+        currentAnimation?.Kill();
+        text.rectTransform.anchoredPosition = Vector2.zero;
+        
+        Sequence anim = DOTween.Sequence();
+
+        float height = rectTransform.sizeDelta.y;
+        
+        anim.Append(text.rectTransform.DOAnchorPosY(height * .125f, 0.125f));
+        anim.Append(text.rectTransform.DOAnchorPosY(0, 0.125f));
+
+        currentAnimation = anim;
+    }
+
+    public void PlaySelectionFailAnimation()
+    {
+        currentAnimation?.Kill();
+        text.rectTransform.anchoredPosition = Vector2.zero;
+
+        Sequence anim = DOTween.Sequence();
+
+        float width = rectTransform.sizeDelta.x;
+
+        anim.Append(text.rectTransform.DOAnchorPosX(width * .0625f, 0.0625f));
+        anim.Append(text.rectTransform.DOAnchorPosX(width * -.0625f, 0.0625f));
+        anim.Append(text.rectTransform.DOAnchorPosX(0, 0.0625f));
+
+        currentAnimation = anim;
     }
 
     private void OnDestroy()
     {
+        currentAnimation?.Kill();
+
         if(rectTransform != null)
             rectTransform.DOKill();
     }

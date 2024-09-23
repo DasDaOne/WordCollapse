@@ -40,7 +40,7 @@ public class GameplaySelection : MonoBehaviour, IPointerDownHandler, IPointerMov
 
 	    currentSelection = new List<LetterCell> {selectedLetterCell};
         
-	    selectedLetterCell.OnSelectionTrigger();
+	    selectedLetterCell.PlaySelectionTriggerAnimation();
 
 	    UpdateWordVisuals();
     }
@@ -74,7 +74,7 @@ public class GameplaySelection : MonoBehaviour, IPointerDownHandler, IPointerMov
 			    return;
             
 		    currentSelection.RemoveAt(currentSelection.Count - 1);
-		    selectedLetterCell.OnSelectionTrigger();
+		    selectedLetterCell.PlaySelectionTriggerAnimation();
 		    UpdateWordVisuals();
 		    return;
 	    }
@@ -83,7 +83,7 @@ public class GameplaySelection : MonoBehaviour, IPointerDownHandler, IPointerMov
 		    return;
 
 	    currentSelection.Add(selectedLetterCell);
-	    selectedLetterCell.OnSelectionTrigger();
+	    selectedLetterCell.PlaySelectionTriggerAnimation();
 	    UpdateWordVisuals();
     }
 
@@ -101,12 +101,14 @@ public class GameplaySelection : MonoBehaviour, IPointerDownHandler, IPointerMov
 
 	    if (selectedWord.Count < GameConstants.MinWordLength)
 	    {
-		    OnInvalidWordSelected();
+		    OnInvalidWordSelected(selectedWord);
 		    return;
 	    }
 	    
 	    if(wordDatabase.IsWordValid(SelectionToString(selectedWord)))
 		    OnValidWordSelected(selectedWord);
+	    else
+		    OnInvalidWordSelected(selectedWord);
     }
 
     private void OnValidWordSelected(List<LetterCell> word)
@@ -114,8 +116,12 @@ public class GameplaySelection : MonoBehaviour, IPointerDownHandler, IPointerMov
 	    gameplayGrid.DeleteCells(word, true);
     }
 
-    private void OnInvalidWordSelected()
+    private void OnInvalidWordSelected(List<LetterCell> word)
     {
+	    foreach (var letter in word)
+	    {
+		    letter.PlaySelectionFailAnimation();
+	    }
     }
     
     private void UpdateWordVisuals()
